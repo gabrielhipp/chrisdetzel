@@ -50,8 +50,15 @@ def scrape_idealo_product(driver):
             (By.XPATH, "//*[@class='productOffers-listItemOfferPrice']")
         )
     )
+    time.sleep(1)
+    """ liststock element """
+    stock_element = wait.until(
+        EC.presence_of_element_located(
+            (By.XPATH, "//*[@class='productOffers-listItemOfferDeliveryStatusDatesRange']")
+        )
+    )
 
-
+    stock_text = stock_element.text.strip()
     price_text = price_element.text.strip()
 
     def parse_price(price_str):
@@ -70,9 +77,10 @@ def scrape_idealo_product(driver):
 
     price_number = parse_price(price_text)
     print(f"Price number: {price_number}")
+    print(f"Stock text: {stock_text}")
 
     return {
         "price": price_number,
-        "availability": "-",
+        "availability": stock_text,
         "shipping_costs": "-",
     }
